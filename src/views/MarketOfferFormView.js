@@ -14,7 +14,7 @@ export class MarketOfferFormView extends React.Component {
     }
 
     componentWillMount(){
-        if(this.props.history.location.pathname == '/add') {
+        if(this.props.history.location.pathname == '/addMarketOffer') {
             this.setState({
                 loading: false,
                 marketOffer: undefined,

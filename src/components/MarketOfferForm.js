@@ -139,7 +139,7 @@ class MarketOfferForm extends React.Component {
 
                         <Button id="submit" type="submit"
                                 disabled={this.state.category == undefined || this.state.category == '' || this.state.title == undefined ||
-                                          this.state.title == '' || this.state.year == description || this.state.description == '' ||
+                                          this.state.title == '' || this.state.description == undefined || this.state.description == '' ||
                                           this.state.denomination == undefined || this.state.denomination == '' || this.state.pricePerUnit == undefined || this.state.pricePerUnit == ''}
                                 raised primary className="md-cell md-cell--2">Save</Button>
                         <Button id="reset" type="reset" raised secondary className="md-cell md-cell--2">Dismiss</Button>
