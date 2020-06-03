@@ -18,7 +18,7 @@ export default class App extends React.Component {
         super(props);
 
         this.state = {
-            title: 'Jardin',
+            title: 'Jardin test v1',
             routes: [
                 { component: MarketOfferListView , path: '/', exact: true},
                 { component: MarketOfferDetailView , path: '/show/:id'},
