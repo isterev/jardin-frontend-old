@@ -20,21 +20,23 @@ export class MarketOfferDetail extends React.Component {
 
         this.userId = UserService.getCurrentUser().id;
 
-        if (props.marketOffer != undefined) {
+        if(props.marketOffer != undefined) {
             this.state = {
-                dateFrom: props.marketOffer.dateFrom,
-                dateTo: props.marketOffer.dateTo,
-                place: props.marketOffer.place,
+                category: props.marketOffer.category,
+                title: props.marketOffer.title,
                 description: props.marketOffer.description,
-                maxMembers: props.marketOffer.maxMembers
+                denomination: props.marketOffer.denomination,
+                pricePerUnit: props.marketOffer.pricePerUnit,
+                //productImage: props.marketOffer.productImage //TODO
             };
         } else {
             this.state = {
-                dateFrom: '',
-                dateTo: '',
-                place: '',
+                category: '',
+                title: '',
                 description: '',
-                maxMembers: ''
+                denomination: '',
+                pricePerUnit: 0,
+                //productImage: null //TODO
             };
         }
 
@@ -43,7 +45,7 @@ export class MarketOfferDetail extends React.Component {
     onDelete(marketOffer) {
         confirmAlert({
             title: 'Confirm',
-            message: "Do you really want to delete this marketOffer?",
+            message: "Do you really want to delete this market offer?",
             buttons: [
                 {
                     label: 'Yes',
@@ -61,7 +63,7 @@ export class MarketOfferDetail extends React.Component {
             <Page>
                 <Card style={style} className="md-block-centered">
 
-                    {UserService.isAuthenticated() && this.userId === this.props.marketOffer.owner ?
+                    {UserService.isAuthenticated() && this.userId === this.props.marketOffer.creator ?
 
                         <Grid className="grid-example">
                             <Cell size={1}>
@@ -83,11 +85,11 @@ export class MarketOfferDetail extends React.Component {
                     <CardText>
                         <Formik
                             initialValues={{
-                                dateFrom: this.state.dateFrom,
-                                dateTo: this.state.dateTo,
-                                place: this.state.place,
+                                category: this.state.category,
+                                title: this.state.title,
                                 description: this.state.description,
-                                maxMembers: this.state.maxMembers
+                                denomination: this.state.denomination,
+                                pricePerUnit: this.state.pricePerUnit
                             }}
                             validationSchema={this.getSchema}
                             onSubmit={this.onSubmit}

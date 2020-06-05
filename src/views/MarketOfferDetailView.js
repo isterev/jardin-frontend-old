@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-import { MarketOfferDetail_old } from '../components/MarketOfferDetail';
+import { MarketOfferDetail } from '../components/MarketOfferDetail';
 
 import MarketOfferService from '../services/MarketOfferService';
 
@@ -48,7 +48,7 @@ export class MarketOfferDetailView extends React.Component {
         }
 
         return (
-            <MarketOfferDetail_old marketOffer={this.state.marketOffer} onDelete={(id) => this.deleteMarketOffer(id)}/>
+            <MarketOfferDetail marketOffer={this.state.marketOffer} onDelete={(id) => this.deleteMarketOffer(id)}/>
         );
     }
 }
