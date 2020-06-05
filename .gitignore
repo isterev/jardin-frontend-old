@@ -33,7 +33,7 @@ bower_components
 build/Release
 
 # installed packages from package.json
-package-lock.json
+package-lock.json*
 
 # Dependency directories
 node_modules/
