@@ -99,13 +99,13 @@ export class MarketOfferDetail extends React.Component {
                                     <Select
                                         name='category'
                                         label='Category'
-                                        placeholder='Select a Category'
+                                        placeholder='Select a category'
                                         options={[
-                                            { value: 'SEEDS_SMALL_PLANTS', label: 'Seeds and Small Plants' },
-                                            { value: 'FERTILISERS', label: 'Fertilisers' },
-                                            { value: 'MECHANICAL_EQUIPMENT', label: 'Mechanical Equipment' },
-                                            { value: 'ELECTRONIC_EQUIPMENT', label: 'Electronic Equipment' },
-                                            { value: 'OTHERS', label: 'Others' },
+                                            { value: 'SEEDS_SMALL_PLANTS', label: 'seeds and small plants' },
+                                            { value: 'FERTILISERS', label: 'fertilisers' },
+                                            { value: 'MECHANICAL_EQUIPMENT', label: 'mechanical equipment' },
+                                            { value: 'ELECTRONIC_EQUIPMENT', label: 'electronic equipment' },
+                                            { value: 'OTHERS', label: 'others' },
                                         ]}
                                         disabled
                                     />
@@ -119,6 +119,7 @@ export class MarketOfferDetail extends React.Component {
                                     <Textarea
                                         name='description'
                                         label='Description'
+                                        style={{width: "90%", height: "150px"}}
                                         disabled
                                     />
 
@@ -127,10 +128,10 @@ export class MarketOfferDetail extends React.Component {
                                         label='Denomination'
                                         placeholder='Select a denomination'
                                         options={[
-                                            { value: 'UNIT', label: 'Unit' },
-                                            { value: 'PER_KG', label: 'Per kg' },
-                                            { value: 'PER_GRAM', label: 'Per gram' },
-                                            { value: 'PER_DAY', label: 'Per day' },
+                                            { value: 'UNIT', label: 'unit' },
+                                            { value: 'PER_KG', label: 'per kg' },
+                                            { value: 'PER_GRAM', label: 'per gram' },
+                                            { value: 'PER_DAY', label: 'per day' },
                                         ]}
                                         disabled
                                     />
