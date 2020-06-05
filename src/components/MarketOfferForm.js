@@ -152,6 +152,7 @@ class MarketOfferForm extends React.Component {
                                         name='description'
                                         label='Description'
                                         hint='Write a detailed description'
+                                        style={{width: "90%", height: "150px"}}
                                     />
 
                                     <Select
