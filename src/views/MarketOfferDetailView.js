@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-import { MarketOfferDetail } from '../components/MarketOfferDetail';
+import { MarketOfferDetail_old } from '../components/MarketOfferDetail';
 
 import MarketOfferService from '../services/MarketOfferService';
 
@@ -31,15 +31,6 @@ export class MarketOfferDetailView extends React.Component {
                 console.error(err);
             }
         })();
-
-        // MarketOfferService.getMarketOffer(id).then((data) => {
-        //     this.setState({
-        //         marketOffer: data,
-        //         loading: false
-        //     });
-        // }).catch((e) => {
-        //     console.error(e);
-        // });
     }
 
     async deleteMarketOffer(id) {
@@ -57,7 +48,7 @@ export class MarketOfferDetailView extends React.Component {
         }
 
         return (
-            <MarketOfferDetail marketOffer={this.state.marketOffer} onDelete={(id) => this.deleteMarketOffer(id)}/>
+            <MarketOfferDetail_old marketOffer={this.state.marketOffer} onDelete={(id) => this.deleteMarketOffer(id)}/>
         );
     }
 }

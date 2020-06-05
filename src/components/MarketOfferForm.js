@@ -1,20 +1,24 @@
 "use strict";
 
+import {Card, Button} from 'react-md';
+import {withRouter} from 'react-router-dom';
 import React from 'react';
-import { Card, Button, FontIcon, TextField } from 'react-md';
-import { withRouter } from 'react-router-dom'
+import {Formik} from 'formik';
+import * as yup from 'yup';
+import {Form, Select, Input, Textarea} from 'react-formik-ui';
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css'
 
-import { AlertMessage } from './AlertMessage';
 import Page from './Page';
 
-
-const style = { maxWidth: 500 };
+const style = {maxWidth: 500};
 
 
 class MarketOfferForm extends React.Component {
 
     constructor(props) {
         super(props);
+        this.isUpdate = false;
 
         if(this.props.marketOffer != undefined) {
             this.state = {
@@ -36,119 +40,161 @@ class MarketOfferForm extends React.Component {
             };
         }
 
-        this.handleChangeCategory = this.handleChangeCategory.bind(this);
-        this.handleChangeTitle = this.handleChangeTitle.bind(this);
-        this.handleChangeDescription = this.handleChangeDescription.bind(this);
-        this.handleChangeDenomination = this.handleChangeDenomination.bind(this);
-        this.handleChangePricePerUnit = this.handleChangePricePerUnit.bind(this);
-        // this.handleChangeProductImage = this.handleChangeProductImage.bind(this);
-
-        this.handleSubmit = this.handleSubmit.bind(this);
+        this.onSubmit = this.onSubmit.bind(this);
     }
 
-    handleChangeCategory(value) {
-        this.setState(Object.assign({}, this.state, {category: value}));
+    onSubmit(values) {
+        confirmAlert({
+            title: 'Confirm',
+            message: "Do you really want to " + (this.isUpdate? "update" : "create") + " this market offer?",
+            buttons: [
+                {
+                    label: 'Yes',
+                    onClick: () => this.confirmOk(values)
+                },
+                {
+                    label: 'No'
+                }
+            ]
+        });
+
     }
 
-    handleChangeTitle(value) {
-        this.setState(Object.assign({}, this.state, {title: value}));
-    }
-
-    handleChangeDescription(value) {
-        this.setState(Object.assign({}, this.state, {description: value}));
-    }
-
-    handleChangeDenomination(value) {
-        this.setState(Object.assign({}, this.state, {denomination: value}));
-    }
-
-    handleChangePricePerUnit(value) {
-        this.setState(Object.assign({}, this.state, {pricePerUnit: value}));
-    }
-
-    //handleChangeProductImage(value) {
-    //    this.setState(Object.assign({}, this.state, {productImage: value}));
-    //}
-
-    handleSubmit(event) {
-        event.preventDefault();
+    confirmOk(values) {
 
         let marketOffer = this.props.marketOffer;
         if(marketOffer == undefined) {
             marketOffer = {};
         }
 
-        marketOffer.category = this.state.category;
-        marketOffer.title = this.state.title;
-        marketOffer.description = this.state.description;
-        marketOffer.denomination = this.state.denomination;
-        marketOffer.pricePerUnit = this.state.pricePerUnit;
+        marketOffer.category = values.category;
+        marketOffer.title = values.title;
+        marketOffer.description = values.description;
+        marketOffer.denomination = values.denomination;
+        marketOffer.pricePerUnit = values.pricePerUnit;
 
         this.props.onSubmit(marketOffer);
     }
 
+
+    // validation with yup
+    getSchema() {
+        return yup.object().shape({
+            category: yup.string()
+                .required('Category is required')
+                .oneOf(
+                    ['SEEDS_SMALL_PLANTS', 'FERTILISERS', 'MECHANICAL_EQUIPMENT', 'ELECTRONIC_EQUIPMENT', 'OTHERS'],
+                    'Invalid category type'
+                ),
+            title: yup.string()
+                .required('Title is required'),
+            description: yup.string()
+                .required('Description is required'),
+            denomination: yup.string()
+                .required('Denomination is required')
+                .oneOf(
+                    ['UNIT','PER_KG', 'PER_GRAM', 'PER_DAY'],
+                    'Invalid Denomination type'
+                ),
+            pricePerUnit: yup.number()
+                .required('Price per unit is required')
+                .min(0, 'Must be non-negative')
+                //.positive('Must be positive')
+                .typeError("Price per unit is required")
+        })
+    };
+
     render() {
         return (
-            <Page>
-                <Card style={style} className="md-block-centered">
-                    <form className="md-grid" onSubmit={this.handleSubmit} onReset={() => this.props.history.goBack()}>
-                        <TextField
-                            label="Category"
-                            id="CategoryField"
-                            type="text"
-                            className="md-row"
-                            required={true}
-                            value={this.state.category}
-                            onChange={this.handleChangeCategory}
-                            errorText="Category is required"/>
-                        <TextField
-                            label="Title"
-                            id="TitleField"
-                            type="text"
-                            className="md-row"
-                            required={true}
-                            value={this.state.title}
-                            onChange={this.handleChangeTitle}
-                            errorText="Title is required"/>
-                        <TextField
-                            label="Description"
-                            id="DescriptionField"
-                            type="text"
-                            className="md-row"
-                            required={false}
-                            rows={5}
-                            value={this.state.description}
-                            onChange={this.handleChangeDescription}/>
-                        <TextField
-                            label="Denomination"
-                            id="DenominationField"
-                            type="text"
-                            className="md-row"
-                            required={true}
-                            value={this.state.denomination}
-                            onChange={this.handleChangeDenomination}/>
-                        <TextField
-                            label="Price per Unit"
-                            id="PricePerUnitField"
-                            type="number"
-                            className="md-row"
-                            required={true}
-                            value={this.state.pricePerUnit}
-                            onChange={this.handleChangePricePerUnit}
-                            errorText="Price per unit is required"/>
 
-                        <Button id="submit" type="submit"
-                                disabled={this.state.category == undefined || this.state.category == '' || this.state.title == undefined ||
-                                          this.state.title == '' || this.state.description == undefined || this.state.description == '' ||
-                                          this.state.denomination == undefined || this.state.denomination == '' || this.state.pricePerUnit == undefined || this.state.pricePerUnit == ''}
-                                raised primary className="md-cell md-cell--2">Save</Button>
-                        <Button id="reset" type="reset" raised secondary className="md-cell md-cell--2">Dismiss</Button>
-                        <AlertMessage className="md-row md-full-width" >{this.props.error ? `${this.props.error}` : ''}</AlertMessage>
-                    </form>
-                </Card>
-            </Page>
-        );
+            <div class="scroll">
+                <Page>
+                    <br/>
+                    <br/>
+                    <br/>
+                    <Card style={style} className="md-block-centered">
+                        <Formik
+                            initialValues={{
+                                category: this.state.category,
+                                title: this.state.title,
+                                description: this.state.description,
+                                denomination: this.state.denomination,
+                                pricePerUnit: this.state.pricePerUnit
+                            }}
+                            validationSchema={this.getSchema}
+                            onSubmit={this.onSubmit}
+                            render={() => (
+                                <Form mode='structured'>
+                                    <br/>
+
+                                    <Select
+                                        name='category'
+                                        label='Category'
+                                        placeholder='Select a category'
+                                        options={[
+                                            { value: 'SEEDS_SMALL_PLANTS', label: 'seeds and small plants' },
+                                            { value: 'FERTILISERS', label: 'fertilisers' },
+                                            { value: 'MECHANICAL_EQUIPMENT', label: 'mechanical equipment' },
+                                            { value: 'ELECTRONIC_EQUIPMENT', label: 'electronic equipment' },
+                                            { value: 'OTHERS', label: 'others' },
+                                        ]}
+                                        // required
+                                    />
+
+                                    <Input
+                                        name='title'
+                                        label='Title'
+                                        hint='Specify a title'
+                                        // required
+                                    />
+
+                                    <Textarea
+                                        name='description'
+                                        label='Description'
+                                        hint='Write a detailed description'
+                                    />
+
+                                    <Select
+                                        name='denomination'
+                                        label='Denomination'
+                                        placeholder='Select a denomination'
+                                        options={[
+                                            { value: 'UNIT', label: 'unit' },
+                                            { value: 'PER_KG', label: 'per kg' },
+                                            { value: 'PER_GRAM', label: 'per gram' },
+                                            { value: 'PER_DAY', label: 'per day' },
+                                        ]}
+                                        // required
+                                    />
+
+                                    <Input
+                                        name='pricePerUnit'
+                                        label='Price per unit'
+                                        hint='Define the price per unit'
+                                        // required
+                                    />
+
+                                    <Button type="submit" raised primary className="md-cell md-cell--2"
+                                            onClick={(() => this.form.submit())}>
+                                        Submit
+                                    </Button>
+                                    <Button type="reset" raised secondary className="md-cell md-cell--2"
+                                            onClick={(() => history.go(-1))}>
+                                        Cancel
+                                    </Button>
+                                </Form>
+
+
+                            )}
+                        />
+                    </Card>
+                </Page>
+
+            </div>
+        )
     }
+
+
 }
 
 export default withRouter(MarketOfferForm);

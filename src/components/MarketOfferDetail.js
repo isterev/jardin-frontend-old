@@ -1,58 +1,154 @@
 "use strict";
 
 import React from 'react';
-import { Link } from 'react-router-dom'
-import { Card, CardTitle, CardText, Media, MediaOverlay, Grid, Cell, Button, FontIcon } from 'react-md';
+import {Link} from 'react-router-dom'
+import {Card, CardTitle, CardText, Grid, Cell, Button, TableColumn, FontIcon} from 'react-md';
+import {Form, Select, Input, Textarea} from "react-formik-ui";
+import {Formik} from "formik";
+import {confirmAlert} from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css'
 
 import Page from './Page';
-
 import UserService from '../services/UserService';
 
-const style = { maxWidth: 500 };
+const style = {maxWidth: 500};
 
 export class MarketOfferDetail extends React.Component {
 
     constructor(props) {
         super(props);
+
+        this.userId = UserService.getCurrentUser().id;
+
+        if (props.marketOffer != undefined) {
+            this.state = {
+                dateFrom: props.marketOffer.dateFrom,
+                dateTo: props.marketOffer.dateTo,
+                place: props.marketOffer.place,
+                description: props.marketOffer.description,
+                maxMembers: props.marketOffer.maxMembers
+            };
+        } else {
+            this.state = {
+                dateFrom: '',
+                dateTo: '',
+                place: '',
+                description: '',
+                maxMembers: ''
+            };
+        }
+
+    }
+
+    onDelete(marketOffer) {
+        confirmAlert({
+            title: 'Confirm',
+            message: "Do you really want to delete this marketOffer?",
+            buttons: [
+                {
+                    label: 'Yes',
+                    onClick: () => this.props.onDelete(marketOffer._id)
+                },
+                {
+                    label: 'No'
+                }
+            ]
+        });
     }
 
     render() {
         return (
             <Page>
                 <Card style={style} className="md-block-centered">
-                    <Grid className="grid-example" >
-                        {/*<Cell size={3}>
-                            <Media aspectRatio="1-1">
-                                <img src={this.props.marketOffer.productImage} alt={this.props.marketOffer.title} />
-                            </Media>
-                        </Cell>*/}
-                        <Cell size={7}/>
-                        <Cell size={1}>
-                            {UserService.isAuthenticated() ?
-                                <Link to={{pathname: `/edit/${this.props.marketOffer._id}`, state : {marketOffer : this.props.marketOffer}}}><Button icon>mode_edit</Button></Link>
-                                : <Link to={'/login'}><Button icon>mode_edit</Button></Link>
-                            }
-                        </Cell>
-                        <Cell size={1}>
-                            {UserService.isAuthenticated() ?
-                                <Button onClick={() => this.props.onDelete(this.props.marketOffer._id)} icon>delete</Button>
-                                :   <Link to={'/login'}><Button icon>delete</Button></Link>
-                            }
-                        </Cell>
-                    </Grid>
 
-                    <CardTitle title={this.props.marketOffer.title} subtitle={this.props.marketOffer.category} />
+                    {UserService.isAuthenticated() && this.userId === this.props.marketOffer.owner ?
+
+                        <Grid className="grid-example">
+                            <Cell size={1}>
+                                <Link to={{
+                                    pathname: `/edit/${this.props.marketOffer._id}`,
+                                    state: {marketOffer: this.props.marketOffer}
+                                }}><Button icon>mode_edit</Button></Link>
+                            </Cell>
+                            <Cell size={1}>
+                                <Button onClick={() => this.onDelete(this.props.marketOffer)} icon>delete</Button>
+                            </Cell>
+                        </Grid>
+
+                        : ""
+                    }
+
+                    <CardTitle title={"Market Offer Details"}/>
 
                     <CardText>
-                        <p>
-                            {this.props.marketOffer.denomination}
-                        </p>
-                        <p>
-                            {this.props.marketOffer.pricePerUnit}
-                        </p>
-                        <p>
-                            {this.props.marketOffer.description}
-                        </p>
+                        <Formik
+                            initialValues={{
+                                dateFrom: this.state.dateFrom,
+                                dateTo: this.state.dateTo,
+                                place: this.state.place,
+                                description: this.state.description,
+                                maxMembers: this.state.maxMembers
+                            }}
+                            validationSchema={this.getSchema}
+                            onSubmit={this.onSubmit}
+                            render={() => (
+                                <Form mode='structured'>
+
+                                    <Select
+                                        name='category'
+                                        label='Category'
+                                        placeholder='Select a Category'
+                                        options={[
+                                            { value: 'SEEDS_SMALL_PLANTS', label: 'Seeds and Small Plants' },
+                                            { value: 'FERTILISERS', label: 'Fertilisers' },
+                                            { value: 'MECHANICAL_EQUIPMENT', label: 'Mechanical Equipment' },
+                                            { value: 'ELECTRONIC_EQUIPMENT', label: 'Electronic Equipment' },
+                                            { value: 'OTHERS', label: 'Others' },
+                                        ]}
+                                        disabled
+                                    />
+
+                                    <Input
+                                        name='title'
+                                        label='Title'
+                                        disabled
+                                    />
+
+                                    <Textarea
+                                        name='description'
+                                        label='Description'
+                                        disabled
+                                    />
+
+                                    <Select
+                                        name='denomination'
+                                        label='Denomination'
+                                        placeholder='Select a denomination'
+                                        options={[
+                                            { value: 'UNIT', label: 'Unit' },
+                                            { value: 'PER_KG', label: 'Per kg' },
+                                            { value: 'PER_GRAM', label: 'Per gram' },
+                                            { value: 'PER_DAY', label: 'Per day' },
+                                        ]}
+                                        disabled
+                                    />
+
+                                    <Input
+                                        name='pricePerUnit'
+                                        label='Price per unit'
+                                        disabled
+                                    />
+
+                                    <Button type="reset" raised secondary className="md-cell md-cell--2"
+                                            onClick={(() => history.go(-1))}>
+                                        Back
+                                    </Button>
+
+                                </Form>
+
+
+                            )}
+                        />
                     </CardText>
                 </Card>
             </Page>
