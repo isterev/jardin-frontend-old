@@ -3,16 +3,31 @@
 import React from 'react';
 import { TableRow, TableColumn, FontIcon, Button } from 'react-md';
 import { Link } from 'react-router-dom';
+import {confirmAlert} from "react-confirm-alert";
 
 import { SimpleLink } from './SimpleLink';
-
 import UserService from '../services/UserService';
-
 
 export class MarketOfferListRow extends React.Component {
 
     constructor(props) {
         super(props);
+    }
+
+    onDelete(marketOffer) {
+        confirmAlert({
+            title: 'Confirm',
+            message: "Do you really want to delete this market offer?",
+            buttons: [
+                {
+                    label: 'Yes',
+                    onClick: () => this.props.onDelete(marketOffer._id)
+                },
+                {
+                    label: 'No'
+                }
+            ]
+        });
     }
 
     render() {
@@ -25,7 +40,7 @@ export class MarketOfferListRow extends React.Component {
                     : <TableColumn><Link to={'/login'}><FontIcon>mode_edit</FontIcon></Link></TableColumn>
                 }
                 {UserService.isAuthenticated() ?
-                    <TableColumn><Button onClick={() => this.props.onDelete(this.props.marketOffer._id)} icon>delete</Button></TableColumn>
+                    <TableColumn><Button onClick={() => this.onDelete(this.props.marketOffer)} icon>delete</Button></TableColumn>
                     : <TableColumn><Link to={'/login'}><FontIcon>delete</FontIcon></Link></TableColumn>
                 }
 

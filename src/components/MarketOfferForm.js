@@ -30,7 +30,7 @@ class MarketOfferForm extends React.Component {
                 //productImage: props.marketOffer.productImage //TODO
             };
             this.isUpdate = true;
-            
+
         } else {
             this.state = {
                 category: '',
