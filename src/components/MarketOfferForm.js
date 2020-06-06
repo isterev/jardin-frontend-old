@@ -29,6 +29,8 @@ class MarketOfferForm extends React.Component {
                 pricePerUnit: props.marketOffer.pricePerUnit,
                 //productImage: props.marketOffer.productImage //TODO
             };
+            this.isUpdate = true;
+            
         } else {
             this.state = {
                 category: '',
