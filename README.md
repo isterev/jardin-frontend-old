@@ -5,6 +5,12 @@ Jardin backend application can be found [here](https://github.com/isterev/jardin
 
 ### Create a Bundle for the Application
 
+First the libraries have to be intalled:
+
+```
+npm intall
+```
+
 This project use [webpack](https://github.com/webpack/webpack) version 1 for creating a bundle of the application and its dependencies
 
 We have pre-configured `npm` to automatically run `webpack` so we can simply do:
